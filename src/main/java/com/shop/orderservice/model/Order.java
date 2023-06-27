@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,14 +15,24 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
+import com.shop.orderservice.util.PostgreSQLEnumType;
+
 @Entity
 @Table(name = "ORDERS")
+@TypeDef(
+	    name = "pgsql_enum",
+	    typeClass = PostgreSQLEnumType.class
+	)
 public class Order 
 {
 	private long id;
 	private long userId;
 	private long totalPrice;
 	private String billingAddress;
+	private OrderStatus status;
 
 	
 	private Set<Item> items = new HashSet<>();
@@ -65,13 +77,24 @@ public class Order
 		this.billingAddress = billingAddress;
 	}
 
-	@OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "order", cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
 	public Set<Item> getItems() {
 		return items;
 	}
 
 	public void setItems(Set<Item> items) {
 		this.items = items;
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(name="ORDER_STATUS", columnDefinition = "ORDER_STATUS")
+    @Type( type = "pgsql_enum" )
+	public OrderStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
 	}
 	
 
