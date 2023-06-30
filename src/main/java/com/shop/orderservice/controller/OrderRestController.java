@@ -75,4 +75,12 @@ public class OrderRestController
 		
 		return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
 	}
+	
+	@GetMapping("/users/{userId}")
+	public ResponseEntity<List<OrderDTO>> getOrdersOfUser(@PathVariable("userId") long userId)
+	{
+		List<OrderDTO> list = orderService.getAllOrdersOfUser(userId);
+		
+		return new ResponseEntity<List<OrderDTO>>(list, HttpStatus.OK);
+	}
 }

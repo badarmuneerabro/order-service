@@ -11,5 +11,6 @@ public interface OrderService
 	OrderDTO getOrderById(long id);
 	List<OrderDTO> getAllOrders();
 	void updateOrder(OrderDTO orderDTO);
+	List<OrderDTO> getAllOrdersOfUser(long userId);
 
 }

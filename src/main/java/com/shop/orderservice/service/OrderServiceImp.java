@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.shop.orderservice.dto.OrderDTO;
 import com.shop.orderservice.dto.UserDTO;
-import com.shop.orderservice.feignclients.UserRestClient;
+import com.shop.orderservice.feignclients.UserServiceFeignClient;
 import com.shop.orderservice.model.Order;
 import com.shop.orderservice.repo.OrderRepository;
 
@@ -26,7 +26,7 @@ public class OrderServiceImp implements OrderService
 	private ModelMapper modelMapper;
 	
 	@Autowired
-	private UserRestClient userRestClient;
+	private UserServiceFeignClient userRestClient;
 	
 	@Override
 	public void saveOrder(OrderDTO orderDTO) throws SQLIntegrityConstraintViolationException 
@@ -74,5 +74,23 @@ public class OrderServiceImp implements OrderService
 	{
 		Order order = modelMapper.map(orderDTO, Order.class);
 		orderRepository.save(order);
+	}
+	
+	@Override
+	public List<OrderDTO> getAllOrdersOfUser(long userId) 
+	{
+		List<Order> orderDTOList = orderRepository.findAllByUserId(userId);
+		
+		List<OrderDTO> list = new ArrayList<>();
+		for(Order o : orderDTOList)
+		{
+			OrderDTO orderDTO = modelMapper.map(o, OrderDTO.class);
+			
+			list.add(orderDTO);
+			
+		}
+		
+		
+		return list;
 	}
 }

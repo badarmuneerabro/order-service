@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.shop.orderservice.dto.UserDTO;
 
 @FeignClient(name = "USER-SERVICE", path = "/users")
-public interface UserRestClient 
+public interface UserServiceFeignClient 
 {
 	@GetMapping("/{orderId}")
 	ResponseEntity<UserDTO> getUserById(@PathVariable("orderId") long id);
