@@ -1,5 +1,6 @@
 package com.shop.orderservice.dto;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +25,13 @@ public class OrderDTO
 
 	@Size(min = 1, message = "At least there should be one item")
 	private Set<Item> items = new HashSet<>();
+	
+	private Date orderDate;
 
+	public OrderDTO() 
+	{
+		setOrderDate(new Date());
+	}
 
 	public long getId() {
 		return id;
@@ -83,6 +90,16 @@ public class OrderDTO
 
 	public void setItems(Set<Item> items) {
 		this.items = items;
+	}
+
+
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
 	}
 	
 	

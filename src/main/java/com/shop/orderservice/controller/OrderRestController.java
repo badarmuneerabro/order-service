@@ -10,18 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.shop.orderservice.dto.OrderDTO;
 import com.shop.orderservice.exception.ResourceNotFoundException;
 import com.shop.orderservice.model.Item;
+import com.shop.orderservice.model.OrderStatus;
 import com.shop.orderservice.service.OrderService;
 
 @RestController
@@ -32,7 +35,7 @@ public class OrderRestController
 	private OrderService orderService;
 	
 	@PostMapping("/")
-	public ResponseEntity<?> saveOrder(@Valid @RequestBody OrderDTO orderDTO) throws SQLIntegrityConstraintViolationException
+	public ResponseEntity<?> saveOrder(@Valid @RequestBody OrderDTO orderDTO) throws MethodArgumentNotValidException, SQLIntegrityConstraintViolationException
 	{
 		orderService.saveOrder(orderDTO);
 		
@@ -82,5 +85,31 @@ public class OrderRestController
 		List<OrderDTO> list = orderService.getAllOrdersOfUser(userId);
 		
 		return new ResponseEntity<List<OrderDTO>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/{orderId}/update-status")
+	public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable("orderId") long orderId, @RequestParam(name = "status", required = true) String status ) throws SQLIntegrityConstraintViolationException
+	{
+		System.out.println("Status=" + status);
+		OrderDTO order = orderService.getOrderById(orderId);
+		
+		if(status.equalsIgnoreCase("shipped"))
+			order.setStatus(OrderStatus.SHIPPED);
+		
+		else if(status.equalsIgnoreCase("completed"))
+			order.setStatus(OrderStatus.COMPLETED);
+		
+		else if(status.equalsIgnoreCase("cencelled"))
+			order.setStatus(OrderStatus.CANCELLED);
+		
+		else if(status.equalsIgnoreCase("pending"))
+			order.setStatus(OrderStatus.PENDING);
+		else {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+		
+		orderService.saveOrder(order);
+		
+		return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
 	}
 }

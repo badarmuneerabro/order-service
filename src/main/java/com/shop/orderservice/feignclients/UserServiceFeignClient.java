@@ -10,7 +10,7 @@ import com.shop.orderservice.dto.UserDTO;
 @FeignClient(name = "USER-SERVICE", path = "/users")
 public interface UserServiceFeignClient 
 {
-	@GetMapping("/{orderId}")
-	ResponseEntity<UserDTO> getUserById(@PathVariable("orderId") long id);
+	@GetMapping("/{userId}")
+	ResponseEntity<UserDTO> getUserById(@PathVariable("userId") long id);
 
 }

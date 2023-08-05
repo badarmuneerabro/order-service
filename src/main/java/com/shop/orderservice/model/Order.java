@@ -1,5 +1,6 @@
 package com.shop.orderservice.model;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -32,10 +35,12 @@ public class Order
 	private long userId;
 	private long totalPrice;
 	private String billingAddress;
+	private Date orderDate;
 	private OrderStatus status;
 
 	
 	private Set<Item> items = new HashSet<>();
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,6 +100,16 @@ public class Order
 
 	public void setStatus(OrderStatus status) {
 		this.status = status;
+	}
+
+	@Column(name = "ORDER_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
 	}
 	
 
