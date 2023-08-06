@@ -1,5 +1,6 @@
 package com.shop.orderservice.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Item 
 {
 	private long id;
+	private String productId;
 	private String name;
 	private int quantity;
 	
@@ -56,6 +58,14 @@ public class Item
 	}
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+	
+	@Column(name = "PRODUCT_ID", length = 100)
+	public String getProductId() {
+		return productId;
+	}
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 	
 	

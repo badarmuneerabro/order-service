@@ -82,7 +82,7 @@ public class Order
 		this.billingAddress = billingAddress;
 	}
 
-	@OneToMany(mappedBy = "order", cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST ,fetch = FetchType.EAGER)
 	public Set<Item> getItems() {
 		return items;
 	}

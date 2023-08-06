@@ -11,8 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.shop.orderservice.dto.OrderDTO;
+import com.shop.orderservice.dto.ProductDTO;
 import com.shop.orderservice.dto.UserDTO;
+import com.shop.orderservice.feignclients.ProductServiceFeignClient;
 import com.shop.orderservice.feignclients.UserServiceFeignClient;
+import com.shop.orderservice.model.Item;
 import com.shop.orderservice.model.Order;
 import com.shop.orderservice.repo.OrderRepository;
 
@@ -28,18 +31,38 @@ public class OrderServiceImp implements OrderService
 	@Autowired
 	private UserServiceFeignClient userRestClient;
 	
+	@Autowired
+	private ProductServiceFeignClient productClient;
+	
 	@Override
 	public void saveOrder(OrderDTO orderDTO) throws SQLIntegrityConstraintViolationException 
 	{
 		try
 		{
 			ResponseEntity<UserDTO> responseEntity = userRestClient.getUserById(orderDTO.getUserId());
+			
+			for(Item item : orderDTO.getItems())
+			{
+				ResponseEntity<ProductDTO> productResponseEntity = productClient.getProductById(item.getProductId());
+				
+				if(productResponseEntity.getStatusCode() == HttpStatus.OK)
+				{
+					ProductDTO productDTO = productResponseEntity.getBody();
+					item.setName(productDTO.getName());
+				}
+				
+			}
 		}catch(Exception e)
 		{
 			throw new SQLIntegrityConstraintViolationException(e.getMessage());
 		}
 		
 		Order order = modelMapper.map(orderDTO, Order.class);
+		
+		for(Item item : order.getItems())
+		{
+			item.setOrder(order);
+		}
 		
 		orderRepository.save(order);
 		
