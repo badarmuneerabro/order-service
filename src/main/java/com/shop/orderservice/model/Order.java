@@ -33,7 +33,7 @@ public class Order
 {
 	private long id;
 	private long userId;
-	private long totalPrice;
+	private double totalPrice;
 	private String billingAddress;
 	private Date orderDate;
 	private OrderStatus status;
@@ -64,11 +64,11 @@ public class Order
 	}
 
 	@Column(name = "TOTAL_PRICE", nullable = false)
-	public long getTotalPrice() {
+	public double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(long totalPrice) {
+	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 	

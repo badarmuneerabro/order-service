@@ -18,7 +18,7 @@ public class OrderDTO
 	@NotNull(message = "*UserID is required.")
 	private Long userId;
 	
-	private long totalPrice;
+	private double totalPrice;
 	
 	private String billingAddress;
 	private OrderStatus status = OrderStatus.PENDING;
@@ -53,12 +53,12 @@ public class OrderDTO
 	}
 
 
-	public long getTotalPrice() {
+	public double getTotalPrice() {
 		return totalPrice;
 	}
 
 
-	public void setTotalPrice(long totalPrice) {
+	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 

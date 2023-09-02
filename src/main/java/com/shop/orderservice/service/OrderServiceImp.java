@@ -37,9 +37,12 @@ public class OrderServiceImp implements OrderService
 	@Override
 	public void saveOrder(OrderDTO orderDTO) throws SQLIntegrityConstraintViolationException 
 	{
+		double totalPrice = 0.0;
 		try
 		{
 			ResponseEntity<UserDTO> responseEntity = userRestClient.getUserById(orderDTO.getUserId());
+			
+			
 			
 			for(Item item : orderDTO.getItems())
 			{
@@ -48,6 +51,7 @@ public class OrderServiceImp implements OrderService
 				if(productResponseEntity.getStatusCode() == HttpStatus.OK)
 				{
 					ProductDTO productDTO = productResponseEntity.getBody();
+					totalPrice = totalPrice + (productDTO.getUnitPrice() * item.getQuantity());
 					item.setName(productDTO.getName());
 				}
 				
@@ -56,7 +60,7 @@ public class OrderServiceImp implements OrderService
 		{
 			throw new SQLIntegrityConstraintViolationException(e.getMessage());
 		}
-		
+		orderDTO.setTotalPrice(totalPrice);
 		Order order = modelMapper.map(orderDTO, Order.class);
 		
 		for(Item item : order.getItems())

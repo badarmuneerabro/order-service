@@ -90,7 +90,6 @@ public class OrderRestController
 	@GetMapping("/{orderId}/update-status")
 	public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable("orderId") long orderId, @RequestParam(name = "status", required = true) String status ) throws SQLIntegrityConstraintViolationException
 	{
-		System.out.println("Status=" + status);
 		OrderDTO order = orderService.getOrderById(orderId);
 		
 		if(status.equalsIgnoreCase("shipped"))
